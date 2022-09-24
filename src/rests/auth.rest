@@ -1,0 +1,27 @@
+@server = http://localhost:5000/api/v0/auth
+@id=6314ac4bb547e46c6d3cb4f0
+@refreshToken="Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzJkOWJjYjgwZDQwMDdkOWYxOGQwYmMiLCJyb2xlIjoiU1VQRVJfQURNSU4iLCJpYXQiOjE2NjQwMDYxMTgsImV4cCI6MTY5NTU2MzcxOH0.sqnm5iaHEzPwyuFsoww-S9nnUJKz10kX4tytkXxLqik"
+
+
+###
+#Get authenticated
+POST {{server}} HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{   
+    "email": "misirali@gmail.com",
+    "password": "12345"
+}
+
+
+###
+#Validate refresh token.
+#Get authenticated and set refreshToken @refreshToken variable
+POST {{server}}/refresh HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{   
+    "refreshToken": {{refreshToken}}
+}

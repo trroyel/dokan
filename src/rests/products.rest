@@ -1,0 +1,149 @@
+@server = http://localhost:5000/api/v0/products
+@id=632eda36811b2bea906cf1d9
+@token=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzJlYjg2ZTgxMWIyYmVhOTA2Y2YxYzUiLCJyb2xlIjoiU1VQRVJfQURNSU4iLCJpYXQiOjE2NjQwMTUxNzMsImV4cCI6MTY2NDAxODc3M30.sa5O6mRAJBZPxTTKcRWsXKaIesBUfn2okYHzyE7UBnw
+   
+#Before accessing these routes, set the oken and id first
+
+###
+#Get products
+GET {{server}} HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}
+
+###
+#Find products
+#status=true | false
+#category= HouseHold | Furniture
+#brand=Akij | RFL | Bengal
+#limit=number of docs you want at a time(any number, default=20)    
+#offset=number of docs you already retrived
+GET {{server}}?limit=5&category=Furniture&brand=Akij&status=true
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}
+
+
+###
+#Query products with filtering, sorting and selected fields
+#limit=number of docs you want at a time(any number, default=10)    
+#page=number of docs you already retrived(offset)
+
+#field=list of properties, separated with ',' invalid property will be skiped!
+#      valid: ['name', 'code', 'model', 'brand', 'category', 'color','prices', ,'stocks '_id', 'createdAt']
+
+#sort=list of sorting property, speparated with ','. prefix with '-' indicates DESC, default is ASC.
+#      vaild: ['category', 'name', 'brand', 'color', 'prices.mrp']
+
+#filter=list of filtering property, separated by ','. Here, key-val means key:val, ie price.dp-gte-8700 means price:{dp:{$gte:8700}}. gte,lte,ne etc is the comparison operator in maongo.
+#      valid: ['category', 'brand', 'prices.dp'] and any comparison operator of mongoDB. 
+
+//Example
+//GET {{server}}/query?field=code,model,brand,prices,category&limit=5&sort=color&filter=category-Furniture
+//GET {{server}}/query?field=name,worng,-brand,color,category,prices.mrp,prices.dp&sort=-prices.mrp&filter=prices.dp-gte-9000
+//GET {{server}}/query?field=code,model,brand,prices,category&page=1&limit=20&sort=prices.mrp&filter=prices.dp-gte-8000,category-Furniture
+GET {{server}}/query?field=category,name,brand,prices&sort=-prices.mrp&filter=price.dp-gte-700,category-HouseHold
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}
+
+
+###
+#Get product by id
+GET {{server}}/{{id}} HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}
+
+
+####
+#Get purchase suggestion
+GET {{server}}/suggestion HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}
+
+
+####
+#Search products in redis by name or code
+#query: name | code
+GET {{server}}/search?query=12366 HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}
+
+
+###
+#Create product
+#status:You can skip status, default is true
+#image:For uploading image, u should use postman form-data
+POST {{server}}/ HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "prices": {
+        "dp": 7000,
+        "mrp": 8000,
+        "purchasingPrice": 6800,
+        "sellingPrice": 7550
+    },
+    "stocks": {
+        "available": 8,
+        "upcoming": 1,
+        "minimum": 10
+    },
+    "name": "Empireor Almira",
+    "model": "Empireor",
+    "brand": "Akij",
+    "code": "12366",
+    "category": "Furniture",
+    "color": "Black",
+    "status": true
+}
+
+
+###
+#Partial update by id
+#code:You can't change the code
+PATCH {{server}}/{{id}} HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "color": "Red",
+    "name": "Empire Wiredrobe",
+    "prices": {
+        "dp": 7900,
+        "mrp": 8900
+    },
+    "stocks": {
+        "available": 55,
+        "upcoming": 20
+    }
+}
+
+
+###
+#Update all product
+PUT {{server}}/{{id}} HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "status": false,
+    "prices": {
+        "dp":7800
+    }
+}
+
+
+###
+#Delete product by id
+DELETE {{server}}/{{id}} HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}

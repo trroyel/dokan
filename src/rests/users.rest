@@ -1,0 +1,97 @@
+@server = http://localhost:5000/api/v0/users
+@id=632eb86e811b2bea906cf1c5
+@token=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzJlYjg2ZTgxMWIyYmVhOTA2Y2YxYzUiLCJyb2xlIjoiTUFOQUdFUiIsImlhdCI6MTY2NDAxNTA2OCwiZXhwIjoxNjY0MDE4NjY4fQ.RitJmEdIFeK1piSoijhIIHDdqzLmtyfY4392ZSOLCXQ
+
+#Before accessing these routes, set the oken and id first
+
+###
+#Get users
+GET {{server}} HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}
+
+
+###
+#Get users by query-string
+#status=true | false
+#role=manager | admin | salesman | super_admin
+#limit=number of docs you want at a time(any number, default=10)    
+#offset=number of docs you already retrived
+GET {{server}}?role=manager&status=true&limit=3&offset=0 HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}
+
+
+###
+#Find user by id
+GET {{server}}/{{id}} HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}
+
+
+###
+#Find current user
+GET {{server}}/me HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}
+
+
+###
+#Create user
+#status:You can skip status, default is false
+#image:For uploading image, u should use postman form-data
+
+POST {{server}} HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}
+
+{   
+    "name": "Himaloy Himu",
+    "address": "Rajshahi, Bangladesh",
+    "age": 32,
+    "mobile": "01400112233",
+    "email": "himu@gmail.com",
+    "password": "12345",
+    "role": "ADMIN",
+    "status": true
+}
+
+
+###
+#Update all user data
+PUT {{server}} HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "status": false,
+    "userids": []
+}
+
+###
+#Partial update by id
+#email:You can't change the email
+PATCH  {{server}}/{{id}} HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    
+    "status": true,
+    "role": "MANAGER"
+}
+
+
+###
+#Delete user by id
+DELETE {{server}}/{{id}} HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+Authorization: {{token}}

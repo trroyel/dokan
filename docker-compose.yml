@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  api:
+    build: .
+    ports:
+      - 5000:5000
+    environment:
+      NODE_ENV: development
+      DB_URL: mongodb://db/dokan
+      REDIS_URL: redis://redis
+    volumes:
+      - ./:/app
+    command: ./docker-entrypoint.sh
+    restart: unless-stopped
+
+  db:
+    image: mongo:4.0.28-xenial
+    ports:
+      - 27017:27017
+    volumes:
+      - dokan:/data/db
+    restart: unless-stopped
+
+  redis:
+    image: redislabs/redisearch:2.4.6
+    ports:
+      - 6379:6379
+    restart: unless-stopped
+
+volumes:
+  dokan:
